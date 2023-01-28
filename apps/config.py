@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 basedir = Path(__file__).parent.parent
@@ -5,7 +6,7 @@ basedir = Path(__file__).parent.parent
 
 class BaseConfig:
     SECRET_KEY = "2AZSMss3p5QPbcY2hBsJ"
-    CALIL_APP_KEY = "aa009cb0d0a711236d89aedcb11bdb9a"
+    CALIL_APP_KEY = os.environ.get("CALIL_APP_KEY")
     WTF_CSRF_SECRET_KEY = "AuwzyszU5sugKN7KZs6f"
 
 
