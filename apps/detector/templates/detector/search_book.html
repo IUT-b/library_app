@@ -1,0 +1,30 @@
+{% extends "detector/base.html" %}
+{% block content %}
+<div>
+    <h4>本を探す</h4>
+
+    <form action="{{url_for('detector.search_book')}}" method="post" enctype="multipart/form-data"
+        novalidate="novalidate">
+        {{ form.csrf_token }}
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">タイトル</label>
+            {{ form.title(class="form-control",type="text") }}
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">著者</label>
+            {{ form.authors(class="form-control",type="text") }}
+        </div>
+        {% for error in form.title.errors %}
+        <div class="mb-3">
+            <span>{{ error }}</span>
+        </div>
+        {% endfor %}
+        {{ form.submit(class="btn btn-primary")}}
+    </form>
+</div>
+<div>
+    <h4>おすすめから探す</h4>
+    <button type="button" class="btn btn-link"><a href={{url_for('detector.recommend_book',media_id='日経新聞書評'
+            )}}>日経新聞書評</a></button>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "detector/base.html" %}
+{% block content %}
+{% with messages=get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li class="flash">{{message}}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<h4>登録している本</h4>
+
+<table class="table table-hover table-sm caption-top">
+    <caption>List of books</caption>
+    <thead>
+        <tr>
+            <th scope="col">タイトル</th>
+            <th scope="col">著者</th>
+            <th scope="col">蔵書</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user_book in user_books %}
+        {% if current_user.id==user_book.User.id %}
+        <tr>
+            <td>{{user_book.UserBook.title}}</td>
+            <td>{{user_book.UserBook.authors}}</td>
+            <td>
+                {% for stock in stocks %}
+                {% for systemid in stock %}
+                {% if stock[systemid]["book_id"] == user_book.UserBook.id %}
+                <p>{{systemid}}：<a href={{stock[systemid]["reserveurl"]}} target="_blank">予約ページ</a></p>
+                {% for k,v in stock[systemid]["libkey"].items() %}
+                <p>{{k}}：{{v}}</p>
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+            </td>
+            <td>
+                <div class="d-flex flex-row">
+                    <div class="px-1">
+                        <form action="{{ url_for('detector.stocktake',book_id=user_book.UserBook.id)}}" method="POST">
+                            {{ stocktake_form.csrf_token }}
+                            {{ stocktake_form.submit(class="btn btn-primary btn-sm") }}
+                        </form>
+                    </div>
+                    <div class="px-1">
+                        <form action="{{url_for('detector.delete_book',book_id=user_book.UserBook.id)}}" method="POST">
+                            {{ delete_form.csrf_token }}
+                            {{ delete_form.submit(class="btn btn-danger btn-sm")}}
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

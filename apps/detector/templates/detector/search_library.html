@@ -1,0 +1,63 @@
+{% extends "detector/base.html" %}
+{% block content %}
+
+<div>
+    <h4>図書館をさがす</h4>
+
+    <form action="{{url_for('detector.search_library')}}" method="post" enctype="multipart/form-data"
+        novalidate="novalidate">
+        {{ form.csrf_token }}
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">都道府県</label>
+            {{ form.pref(class="form-control",type="text") }}
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">市区町村</label>
+            {{ form.city(class="form-control",type="text") }}
+        </div>
+        {% for error in form.pref.errors %}
+        <div class="mb-3">
+            <span>{{ error }}</span>
+        </div>
+        {% endfor %}
+        {% for error in form.city.errors %}
+        <div class="mb-3">
+            <span>{{ error }}</span>
+        </div>
+        {% endfor %}
+        {{ form.submit(class="btn btn-primary")}}
+    </form>
+</div>
+
+
+<h4>登録している図書館</h4>
+<table class="table table-hover table-sm caption-top">
+    <caption>List of libraries</caption>
+    <thead>
+        <tr>
+            <th scope="col">図書館</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user_library in user_libraries %}
+        {% if current_user.id==user_library.User.id %}
+        <tr>
+            <td>{{user_library.UserLibrary.formal}}（{{user_library.UserLibrary.systemname}}）</td>
+            <td>
+                <div class="d-flex flex-row">
+                    <div class="px-1">
+                        <form action="{{url_for('detector.delete_library',library_id=user_library.UserLibrary.id)}}"
+                            method="POST">
+                            {{ delete_form.csrf_token }}
+                            {{ delete_form.submit(class="btn btn-danger btn-sm") }}
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

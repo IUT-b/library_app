@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Heavy Library Use</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}" />
+</head>
+
+<body>
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="background-color: #e3f2fd;"> -->
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+        <div class="container">
+            <a class="navbar-brand" href="{{url_for('detector.index')}}">Heavy Library Use</a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="{{url_for('detector.search_book')}}" class="nav-link">本を探す</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url_for('detector.search_library')}}" class="nav-link">図書館を登録</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-iten">
+                    <span class="nav-link">{{current_user.username}}</span>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url_for('auth.logout')}}" class="nav-link">ログアウト</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('auth.signup')}}">新規登録</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('auth.login')}}">ログイン</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <section class="container">
+        {% block content %}{% endblock %}
+    </section>
+</body>
+
+</html>
